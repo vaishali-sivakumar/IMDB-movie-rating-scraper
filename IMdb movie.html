@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>IMDb Movie Rating Scraper · Blue Theme</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #e8f0f8;
+            min-height: 100vh;
+            overflow-x: hidden;
+            touch-action: manipulation;
+            -webkit-user-select: none;
+            user-select: none;
+            background: #080c14;
+        }
+
+        /* ============================================================
+           BLUE CINEMA THEME
+           ============================================================ */
+        .bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: #080c14;
+            overflow: hidden;
+        }
+
+        /* Blue glow */
+        .cinema-glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.12;
+            animation: glowFloat 30s ease-in-out infinite alternate;
+        }
+
+        .cinema-glow:nth-child(1) {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(50, 150, 255, 0.08), transparent 70%);
+            top: -200px;
+            right: -100px;
+            animation-duration: 25s;
+        }
+
+        .cinema-glow:nth-child(2) {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(30, 100, 220, 0.05), transparent 70%);
+            bottom: -150px;
+            left: -100px;
+            animation-duration: 30s;
+            animation-delay: 3s;
+        }
+
+        .cinema-glow:nth-child(3) {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(20, 80, 200, 0.04), transparent 70%);
+            top: 40%;
+            left: 50%;
+            animation-duration: 20s;
+            animation-delay: 5s;
+        }
+
+        .cinema-glow:nth-child(4) {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(80, 180, 255, 0.03), transparent 70%);
+            bottom: 20%;
+            right: 20%;
+            animation-duration: 28s;
+            animation-delay: 7s;
+        }
+
+        @keyframes glowFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(40px, -50px) scale(1.1); }
+            66% { transform: translate(-30px, 40px) scale(0.9); }
+            100% { transform: translate(30px, -30px) scale(1.05); }
+        }
+
+        .bg-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.02'/%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        .bg-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(
+                    90deg,
+                    transparent 0px,
+                    transparent 48px,
+                    rgba(50, 150, 255, 0.006) 48px,
+                    rgba(50, 150, 255, 0.006) 50px,
+                    transparent 50px,
+                    transparent 98px
+                ),
+                repeating-linear-gradient(
+                    180deg,
+                    transparent 0px,
+                    transparent 38px,
+                    rgba(50, 150, 255, 0.004) 38px,
+                    rgba(50, 150, 255, 0.004) 40px,
+                    transparent 40px,
+                    transparent 78px
+                );
+            pointer-events: none;
+        }
+
+        .cinema-icon {
+            position: absolute;
+            font-size: 2.5rem;
+            color: rgba(50, 150, 255, 0.015);
+            animation: iconFloat 25s linear infinite;
+            pointer-events: none;
+        }
+
+        .cinema-icon:nth-child(5) { top: 10%; left: 5%; animation-duration: 30s; font-size: 3rem; }
+        .cinema-icon:nth-child(6) { top: 20%; right: 10%; animation-duration: 22s; animation-delay: 4s; }
+        .cinema-icon:nth-child(7) { bottom: 25%; left: 8%; animation-duration: 28s; animation-delay: 6s; font-size: 3.5rem; }
+        .cinema-icon:nth-child(8) { bottom: 15%; right: 8%; animation-duration: 26s; animation-delay: 2s; }
+        .cinema-icon:nth-child(9) { top: 50%; left: 3%; animation-duration: 32s; animation-delay: 9s; font-size: 2rem; }
+        .cinema-icon:nth-child(10) { top: 55%; right: 3%; animation-duration: 24s; animation-delay: 5s; }
+
+        @keyframes iconFloat {
+            0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 0.15; }
+            25% { transform: translateY(-50px) rotate(15deg) scale(1.2); opacity: 0.4; }
+            50% { transform: translateY(30px) rotate(-10deg) scale(0.8); opacity: 0.08; }
+            75% { transform: translateY(-25px) rotate(10deg) scale(1.1); opacity: 0.3; }
+            100% { transform: translateY(0) rotate(0deg) scale(1); opacity: 0.15; }
+        }
+
+        .cinema-watermark {
+            position: absolute;
+            bottom: 40px;
+            right: 40px;
+            font-size: 5rem;
+            font-weight: 900;
+            color: rgba(50, 150, 255, 0.01);
+            letter-spacing: -3px;
+            pointer-events: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* ============================================================
+           CONTAINER
+           ============================================================ */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 16px 12px 40px;
+        }
+
+        .glass {
+            background: rgba(12, 20, 36, 0.35);
+            backdrop-filter: blur(14px) saturate(180%);
+            -webkit-backdrop-filter: blur(14px) saturate(180%);
+            border: 1px solid rgba(50, 150, 255, 0.04);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .glass-blue {
+            background: rgba(12, 20, 36, 0.35);
+            backdrop-filter: blur(14px) saturate(180%);
+            -webkit-backdrop-filter: blur(14px) saturate(180%);
+            border: 1px solid rgba(50, 150, 255, 0.06);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(50, 150, 255, 0.01);
+        }
+
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding: 14px 18px;
+            border-radius: 20px;
+            background: rgba(8, 14, 28, 0.5);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(50, 150, 255, 0.03);
+        }
+
+        .logo h1 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #80c8ff 20%, #3498db 70%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            font-size: 0.6rem;
+            color: #6a8aaa;
+            -webkit-text-fill-color: #6a8aaa;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 16px;
+        }
+
+        .header-stat {
+            text-align: center;
+        }
+
+        .header-stat .num {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #3498db;
+        }
+
+        .header-stat .label {
+            font-size: 0.55rem;
+            color: #6a8aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .live-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(50, 150, 255, 0.03);
+            border: 1px solid rgba(50, 150, 255, 0.04);
+            padding: 4px 12px 4px 8px;
+            border-radius: 40px;
+            font-size: 0.6rem;
+            color: #3498db;
+            font-weight: 600;
+        }
+
+        .live-badge i {
+            font-size: 0.4rem;
+            color: #ff4444;
+            animation: pulseDot 1.2s infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.2; transform: scale(0.6); }
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(50, 150, 255, 0.03);
+            border-radius: 50px;
+            padding: 10px 18px 10px 20px;
+            flex: 1;
+            min-width: 180px;
+            transition: all 0.3s;
+            touch-action: manipulation;
+        }
+
+        .search-box:focus-within {
+            border-color: rgba(50, 150, 255, 0.08);
+            background: rgba(50, 150, 255, 0.02);
+        }
+
+        .search-box i {
+            color: #5a7a9a;
+            margin-right: 10px;
+            font-size: 0.8rem;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #e8f0f8;
+            font-size: 0.85rem;
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .search-box input::placeholder {
+            color: #4a5a7a;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 14px;
+            border-radius: 40px;
+            border: 1px solid rgba(50, 150, 255, 0.02);
+            background: rgba(255, 255, 255, 0.01);
+            color: #7a9aba;
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            min-height: 36px;
+        }
+
+        .filter-btn:active {
+            transform: scale(0.95);
+        }
+
+        .filter-btn:hover {
+            background: rgba(50, 150, 255, 0.02);
+            border-color: rgba(50, 150, 255, 0.04);
+            color: #aac8e8;
+        }
+
+        .filter-btn.active {
+            background: rgba(50, 150, 255, 0.04);
+            border-color: rgba(50, 150, 255, 0.08);
+            color: #3498db;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        /* Movie List */
+        .movie-list {
+            padding: 16px 14px;
+        }
+
+        .movie-list h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #aac8e8;
+        }
+
+        .movie-list h2 i {
+            color: #3498db;
+        }
+
+        .movie-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 8px;
+            border-radius: 14px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(50, 150, 255, 0.01);
+            gap: 10px;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .movie-item:active {
+            transform: scale(0.98);
+            background: rgba(50, 150, 255, 0.01);
+        }
+
+        .movie-item:hover {
+            background: rgba(50, 150, 255, 0.01);
+        }
+
+        .movie-poster {
+            width: 40px;
+            height: 56px;
+            border-radius: 5px;
+            flex-shrink: 0;
+            background: linear-gradient(145deg, rgba(20, 30, 50, 0.8), rgba(8, 12, 24, 0.9));
+            border: 1px solid rgba(50, 150, 255, 0.02);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: rgba(50, 150, 255, 0.06);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .movie-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .movie-poster .fallback-icon {
+            font-size: 1rem;
+            color: rgba(50, 150, 255, 0.04);
+        }
+
+        .movie-rank {
+            font-weight: 700;
+            color: #3498db;
+            width: 32px;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .movie-info {
+            flex: 1;
+            padding-left: 2px;
+            min-width: 0;
+        }
+
+        .movie-info .title {
+            font-weight: 500;
+            color: #d8e8f8;
+            font-size: 0.82rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .movie-info .year {
+            font-size: 0.6rem;
+            color: #6a8aaa;
+            margin-left: 6px;
+        }
+
+        .movie-rating {
+            font-weight: 700;
+            font-size: 0.8rem;
+            min-width: 38px;
+            text-align: right;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .movie-rating i {
+            font-size: 0.5rem;
+            margin-right: 3px;
+            opacity: 0.4;
+        }
+
+        /* Stats Panel */
+        .stats-panel {
+            padding: 18px 16px;
+        }
+
+        .stats-panel h3 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #aac8e8;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stats-panel h3 i {
+            color: #3498db;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(50, 150, 255, 0.01);
+            font-size: 0.8rem;
+        }
+
+        .stat-row .label {
+            color: #7a9aba;
+        }
+
+        .stat-row .value {
+            color: #3498db;
+            font-weight: 600;
+        }
+
+        .rating-bar-wrap {
+            margin: 10px 0 6px;
+        }
+
+        .rating-bar-wrap .bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.65rem;
+            color: #6a8aaa;
+            margin-bottom: 3px;
+        }
+
+        .rating-bar {
+            height: 5px;
+            background: rgba(50, 150, 255, 0.02);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .rating-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #1a6fb5);
+            border-radius: 10px;
+            transition: width 0.8s ease;
+        }
+
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            height: 80px;
+            margin-top: 12px;
+            padding-top: 6px;
+        }
+
+        .chart-bar-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .chart-bar {
+            width: 100%;
+            background: linear-gradient(0deg, #3498db, #1a6fb5);
+            border-radius: 4px 4px 0 0;
+            min-height: 6px;
+            opacity: 0.4;
+            transition: height 0.6s ease;
+        }
+
+        .chart-bar-label {
+            font-size: 0.5rem;
+            color: #5a7a9a;
+            margin-top: 3px;
+        }
+
+        /* Comparison Section */
+        .comparison-section {
+            margin-top: 16px;
+            padding: 16px 14px;
+        }
+
+        .comparison-section h3 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #aac8e8;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .comparison-section h3 i {
+            color: #3498db;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .comparison-card {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(50, 150, 255, 0.01);
+            border-radius: 14px;
+            padding: 12px 14px;
+            transition: all 0.2s;
+            touch-action: manipulation;
+        }
+
+        .comparison-card:active {
+            transform: scale(0.97);
+            background: rgba(50, 150, 255, 0.01);
+        }
+
+        .comparison-card .cmp-title {
+            font-size: 0.65rem;
+            color: #7a9aba;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .comparison-card .cmp-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #3498db;
+            margin-top: 2px;
+        }
+
+        .comparison-card .cmp-sub {
+            font-size: 0.6rem;
+            color: #6a8aaa;
+            margin-top: 1px;
+        }
+
+        .comparison-card .cmp-diff {
+            display: inline-block;
+            font-size: 0.6rem;
+            font-weight: 600;
+            padding: 1px 10px;
+            border-radius: 20px;
+            margin-top: 4px;
+        }
+
+        .cmp-diff.positive {
+            background: rgba(50, 200, 100, 0.04);
+            color: #40d080;
+            border: 1px solid rgba(50, 200, 100, 0.03);
+        }
+
+        .cmp-diff.negative {
+            background: rgba(200, 80, 80, 0.04);
+            color: #d07070;
+            border: 1px solid rgba(200, 80, 80, 0.03);
+        }
+
+        .cmp-diff.neutral {
+            background: rgba(50, 150, 255, 0.02);
+            color: #3498db;
+            border: 1px solid rgba(50, 150, 255, 0.02);
+        }
+
+        .cinema-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(50, 150, 255, 0.02);
+            border: 1px solid rgba(50, 150, 255, 0.03);
+            border-radius: 40px;
+            padding: 8px 16px 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.65rem;
+            color: #3498db;
+            backdrop-filter: blur(10px);
+            z-index: 500;
+            animation: floatUp 2s ease-in-out infinite;
+        }
+
+        .cinema-float i {
+            font-size: 0.6rem;
+            animation: pulseDot 1.2s infinite;
+            color: #ff4444;
+        }
+
+        @keyframes floatUp {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 30px 0;
+            color: #6a8aaa;
+            font-size: 0.8rem;
+        }
+
+        .no-results i {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 8px;
+            opacity: 0.1;
+        }
+
+        .movie-count {
+            font-size: 0.65rem;
+            color: #6a8aaa;
+            margin-left: 6px;
+        }
+
+        /* ============================================================
+           MOVIE DETAIL MODAL
+           ============================================================ */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-content {
+            background: rgba(10, 16, 28, 0.95);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(50, 150, 255, 0.04);
+            border-radius: 28px;
+            max-width: 420px;
+            width: 100%;
+            padding: 28px 24px 24px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+            touch-action: pan-y;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: none;
+            color: #6a8aaa;
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 4px 10px;
+            border-radius: 40px;
+            transition: all 0.2s;
+            touch-action: manipulation;
+        }
+
+        .modal-close:active {
+            transform: scale(0.9);
+            color: #3498db;
+        }
+
+        .modal-poster {
+            width: 100%;
+            height: 200px;
+            border-radius: 16px;
+            background: linear-gradient(145deg, rgba(20, 30, 50, 0.8), rgba(8, 12, 24, 0.9));
+            border: 1px solid rgba(50, 150, 255, 0.02);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .modal-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-poster .fallback-icon {
+            font-size: 3rem;
+            color: rgba(50, 150, 255, 0.04);
+        }
+
+        .modal-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #e8f0f8;
+            margin-bottom: 4px;
+        }
+
+        .modal-year {
+            font-size: 0.9rem;
+            color: #6a8aaa;
+            margin-bottom: 12px;
+        }
+
+        .modal-rating {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .modal-rating .big-rating {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: #3498db;
+            transition: all 0.3s ease;
+        }
+
+        .modal-rating .rating-label {
+            font-size: 0.7rem;
+            color: #7a9aba;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-rating .stars {
+            color: #3498db;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+        }
+
+        .modal-rank {
+            display: inline-block;
+            background: rgba(50, 150, 255, 0.02);
+            border: 1px solid rgba(50, 150, 255, 0.02);
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            color: #3498db;
+            font-weight: 600;
+        }
+
+        .modal-details {
+            margin-top: 16px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .modal-detail-item {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(50, 150, 255, 0.01);
+            border-radius: 12px;
+            padding: 10px 12px;
+            text-align: center;
+        }
+
+        .modal-detail-item .label {
+            font-size: 0.55rem;
+            color: #6a8aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .modal-detail-item .value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #d8e8f8;
+            margin-top: 2px;
+        }
+
+        .modal-detail-item .value.gold {
+            color: #3498db;
+        }
+
+        .modal-book-btn {
+            width: 100%;
+            margin-top: 18px;
+            padding: 14px;
+            border: none;
+            border-radius: 60px;
+            background: linear-gradient(135deg, #3498db, #1a6fb5);
+            color: #e8f0f8;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+            touch-action: manipulation;
+        }
+
+        .modal-book-btn:active {
+            transform: scale(0.97);
+            opacity: 0.8;
+        }
+
+        .modal-book-btn i {
+            margin-right: 8px;
+        }
+
+        .modal-booked-msg {
+            text-align: center;
+            margin-top: 12px;
+            padding: 10px;
+            background: rgba(50, 200, 100, 0.02);
+            border: 1px solid rgba(50, 200, 100, 0.03);
+            border-radius: 12px;
+            color: #40d080;
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        .modal-booked-msg.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (min-width: 600px) {
+            .container {
+                padding: 20px 20px 50px;
+            }
+            .dashboard-grid {
+                grid-template-columns: 2fr 1fr;
+                gap: 20px;
+            }
+            .movie-poster {
+                width: 46px;
+                height: 64px;
+            }
+            .movie-item {
+                padding: 12px 14px;
+            }
+            .header {
+                padding: 18px 28px;
+            }
+            .logo h1 {
+                font-size: 1.6rem;
+            }
+            .comparison-grid {
+                grid-template-columns: 1fr 1fr 1fr 1fr;
+            }
+            .modal-content {
+                padding: 32px 28px 28px;
+            }
+            .modal-poster {
+                height: 240px;
+            }
+            .cinema-float {
+                bottom: 40px;
+                right: 40px;
+            }
+        }
+
+        @media (min-width: 900px) {
+            .container {
+                padding: 30px 40px 60px;
+            }
+            .dashboard-grid {
+                gap: 28px;
+            }
+            .movie-poster {
+                width: 52px;
+                height: 72px;
+            }
+            .movie-item {
+                padding: 14px 18px;
+            }
+            .filter-btn {
+                padding: 10px 22px;
+                font-size: 0.8rem;
+            }
+            .comparison-card .cmp-value {
+                font-size: 1.6rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .header-stats {
+                gap: 10px;
+            }
+            .header-stat .num {
+                font-size: 1rem;
+            }
+            .header-stat .label {
+                font-size: 0.5rem;
+            }
+            .logo h1 {
+                font-size: 1.1rem;
+            }
+            .movie-item {
+                padding: 8px 4px;
+                gap: 6px;
+            }
+            .movie-poster {
+                width: 32px;
+                height: 46px;
+            }
+            .movie-rank {
+                width: 26px;
+                font-size: 0.65rem;
+            }
+            .movie-info .title {
+                font-size: 0.72rem;
+            }
+            .movie-rating {
+                font-size: 0.7rem;
+                min-width: 32px;
+            }
+            .comparison-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+            .comparison-card {
+                padding: 8px 10px;
+            }
+            .comparison-card .cmp-value {
+                font-size: 1rem;
+            }
+            .modal-content {
+                padding: 20px 16px 20px;
+            }
+            .modal-title {
+                font-size: 1.1rem;
+            }
+            .modal-poster {
+                height: 160px;
+            }
+            .modal-rating .big-rating {
+                font-size: 1.8rem;
+            }
+            .modal-details {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+            .cinema-watermark {
+                font-size: 3rem;
+                bottom: 20px;
+                right: 20px;
+            }
+            .cinema-icon {
+                display: none;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 3px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(50, 150, 255, 0.08);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================================
+    BLUE CINEMA BACKGROUND
+    ============================================================ -->
+    <div class="bg-container">
+        <div class="cinema-glow"></div>
+        <div class="cinema-glow"></div>
+        <div class="cinema-glow"></div>
+        <div class="cinema-glow"></div>
+        
+        <div class="cinema-icon"><i class="fas fa-film"></i></div>
+        <div class="cinema-icon"><i class="fas fa-play-circle"></i></div>
+        <div class="cinema-icon"><i class="fas fa-star"></i></div>
+        <div class="cinema-icon"><i class="fas fa-ticket-alt"></i></div>
+        <div class="cinema-icon"><i class="fas fa-crown"></i></div>
+        <div class="cinema-icon"><i class="fas fa-video"></i></div>
+        
+        <div class="cinema-watermark">IMDb</div>
+    </div>
+
+    <!-- Floating Indicator -->
+    <div class="cinema-float">
+        <i class="fas fa-heart"></i>
+        <span>Live · <span id="heartbeatCount">250</span> movies</span>
+    </div>
+
+    <!-- ============================================================
+    MOVIE DETAIL MODAL
+    ============================================================ -->
+    <div class="modal-overlay" id="movieModal" onclick="closeModalOutside(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            
+            <div class="modal-poster" id="modalPoster">
+                <i class="fas fa-film fallback-icon"></i>
+            </div>
+            
+            <div class="modal-title" id="modalTitle">Movie Title</div>
+            <div class="modal-year" id="modalYear">(2024)</div>
+            
+            <div class="modal-rating">
+                <span class="big-rating" id="modalRating">9.0</span>
+                <div>
+                    <div class="stars" id="modalStars">★★★★★</div>
+                    <div class="rating-label">IMDb Rating</div>
+                </div>
+                <span style="margin-left:auto;" class="modal-rank" id="modalRank">#1</span>
+            </div>
+            
+            <div class="modal-details">
+                <div class="modal-detail-item">
+                    <div class="label">Rank</div>
+                    <div class="value gold" id="detailRank">#1</div>
+                </div>
+                <div class="modal-detail-item">
+                    <div class="label">Year</div>
+                    <div class="value" id="detailYear">2024</div>
+                </div>
+                <div class="modal-detail-item">
+                    <div class="label">Rating</div>
+                    <div class="value gold" id="detailRating">9.0</div>
+                </div>
+                <div class="modal-detail-item">
+                    <div class="label">Genre</div>
+                    <div class="value" id="detailGenre">Drama</div>
+                </div>
+            </div>
+            
+            <button class="modal-book-btn" onclick="bookTicket()">
+                <i class="fas fa-ticket-alt"></i> Book Now
+            </button>
+            
+            <div class="modal-booked-msg" id="bookedMsg">
+                <i class="fas fa-check-circle"></i> Ticket Booked Successfully! 🎉
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <h1>🎬 IMDb Scraper</h1>
+                <span>Top 250</span>
+            </div>
+            <div class="header-stats">
+                <div class="header-stat">
+                    <div class="num" id="totalMovies">250</div>
+                    <div class="label">Movies</div>
+                </div>
+                <div class="header-stat">
+                    <div class="num" id="avgRating">9.12</div>
+                    <div class="label">Avg</div>
+                </div>
+                <div class="header-stat">
+                    <div class="num" id="topRating">9.3</div>
+                    <div class="label">Top</div>
+                </div>
+                <div class="live-badge">
+                    <i class="fas fa-heart"></i> LIVE
+                </div>
+            </div>
+        </header>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search movies..." oninput="filterMovies()" />
+            </div>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">All</button>
+                <button class="filter-btn" data-filter="top10" onclick="setFilter('top10')">Top 10</button>
+                <button class="filter-btn" data-filter="9plus" onclick="setFilter('9plus')">9.0+</button>
+                <button class="filter-btn" data-filter="8plus" onclick="setFilter('8plus')">8.5+</button>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="dashboard-grid">
+
+            <!-- Movie List -->
+            <div class="movie-list glass">
+                <h2>
+                    <i class="fas fa-list-ul"></i> 
+                    Rankings 
+                    <span class="movie-count" id="movieCount">250 titles</span>
+                </h2>
+                <div id="movieContainer"></div>
+            </div>
+
+            <!-- Stats Panel -->
+            <div class="stats-panel glass-blue">
+                <h3><i class="fas fa-chart-simple"></i> Analytics</h3>
+
+                <div class="stat-row">
+                    <span class="label">Mean Rating</span>
+                    <span class="value" id="statMean">9.12</span>
+                </div>
+                <div class="stat-row">
+                    <span class="label">Median</span>
+                    <span class="value" id="statMedian">9.0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="label">Top 10 Avg</span>
+                    <span class="value" id="statTop10">9.12</span>
+                </div>
+                <div class="stat-row">
+                    <span class="label">9.0+ Movies</span>
+                    <span class="value" id="stat9plus">0</span>
+                </div>
+
+                <div style="margin-top:12px;">
+                    <div class="rating-bar-wrap">
+                        <div class="bar-label">
+                            <span>Distribution (Top 10)</span>
+                            <span id="distLabel">9.0+</span>
+                        </div>
+                        <div class="rating-bar">
+                            <div class="rating-fill" id="distFill" style="width:0%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-bars" id="chartBars">
+                    <div class="chart-bar-item">
+                        <div class="chart-bar" style="height:82%;"></div>
+                        <span class="chart-bar-label">9.3</span>
+                    </div>
+                    <div class="chart-bar-item">
+                        <div class="chart-bar" style="height:76%;"></div>
+                        <span class="chart-bar-label">9.2</span>
+                    </div>
+                    <div class="chart-bar-item">
+                        <div class="chart-bar" style="height:68%;"></div>
+                        <span class="chart-bar-label">9.0</span>
+                    </div>
+                    <div class="chart-bar-item">
+                        <div class="chart-bar" style="height:68%;"></div>
+                        <span class="chart-bar-label">9.0</span>
+                    </div>
+                    <div class="chart-bar-item">
+                        <div class="chart-bar" style="height:60%;"></div>
+                        <span class="chart-bar-label">8.9</span>
+                    </div>
+                </div>
+
+                <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
+                    <span style="background:rgba(50,150,255,0.02); padding:3px 12px; border-radius:40px; font-size:0.6rem; border:1px solid rgba(50,150,255,0.01); color:#7a9aba;">
+                        <i class="fas fa-star" style="color:#3498db;"></i> 250 titles
+                    </span>
+                    <span style="background:rgba(50,150,255,0.02); padding:3px 12px; border-radius:40px; font-size:0.6rem; border:1px solid rgba(50,150,255,0.01); color:#7a9aba;">
+                        <i class="fas fa-heart" style="color:#ff4444;"></i> Live
+                    </span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Comparison Section -->
+        <div class="comparison-section glass">
+            <h3><i class="fas fa-arrow-right-arrow-left"></i> வித்தியாசம் · Comparison</h3>
+            <div class="comparison-grid">
+                <div class="comparison-card" ontouchstart="this.style.transform='scale(0.97)'" ontouchend="this.style.transform='scale(1)'">
+                    <div class="cmp-title"><i class="fas fa-crown" style="color:#3498db;"></i> Top 5 vs Bottom 5</div>
+                    <div class="cmp-value" id="cmpTopBottom">+1.2</div>
+                    <div class="cmp-sub">Top 5 avg 9.28</div>
+                    <span class="cmp-diff positive">+14.9%</span>
+                </div>
+                <div class="comparison-card" ontouchstart="this.style.transform='scale(0.97)'" ontouchend="this.style.transform='scale(1)'">
+                    <div class="cmp-title"><i class="fas fa-calendar-alt" style="color:#3498db;"></i> Classic vs Modern</div>
+                    <div class="cmp-value" id="cmpClassicModern">+0.35</div>
+                    <div class="cmp-sub">Classic avg 8.92</div>
+                    <span class="cmp-diff positive">+4.1%</span>
+                </div>
+                <div class="comparison-card" ontouchstart="this.style.transform='scale(0.97)'" ontouchend="this.style.transform='scale(1)'">
+                    <div class="cmp-title"><i class="fas fa-film" style="color:#3498db;"></i> Drama vs Action</div>
+                    <div class="cmp-value" id="cmpDramaAction">+0.52</div>
+                    <div class="cmp-sub">Drama avg 8.94</div>
+                    <span class="cmp-diff positive">+6.2%</span>
+                </div>
+                <div class="comparison-card" ontouchstart="this.style.transform='scale(0.97)'" ontouchend="this.style.transform='scale(1)'">
+                    <div class="cmp-title"><i class="fas fa-star" style="color:#3498db;"></i> 9.0+ vs 8.0-8.5</div>
+                    <div class="cmp-value" id="cmpHighLow">+0.85</div>
+                    <div class="cmp-sub">9.0+ count: 5</div>
+                    <span class="cmp-diff positive">+10.3%</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ============================================================
+        // IMDb TOP 250 MOVIE DATA
+        // ============================================================
+        const MOVIES = [
+            { rank: 1, title: "The Shawshank Redemption", year: 1994, rating: 9.3, poster: "https://image.tmdb.org/t/p/w92/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg", genre: "Drama" },
+            { rank: 2, title: "The Godfather", year: 1972, rating: 9.2, poster: "https://image.tmdb.org/t/p/w92/3bhkrj58Vtu7enYsRolD1fZdja1.jpg", genre: "Crime" },
+            { rank: 3, title: "The Dark Knight", year: 2008, rating: 9.0, poster: "https://image.tmdb.org/t/p/w92/qJ2tW6WMUDux911r6m7haRef0WH.jpg", genre: "Action" },
+            { rank: 4, title: "The Godfather Part II", year: 1974, rating: 9.0, poster: "https://image.tmdb.org/t/p/w92/amXHfZt2OHnEXFfA1A08KLfDlNQ.jpg", genre: "Crime" },
+            { rank: 5, title: "12 Angry Men", year: 1957, rating: 9.0, poster: "https://image.tmdb.org/t/p/w92/ow3wq89wM8qd5X7hWKxiRfsFf9C.jpg", genre: "Drama" },
+            { rank: 6, title: "Schindler's List", year: 1993, rating: 8.9, poster: "https://image.tmdb.org/t/p/w92/sF1U4EUQS8YHUYjNl3pMGNIQyr0.jpg", genre: "Drama" },
+            { rank: 7, title: "The Lord of the Rings: The Return of the King", year: 2003, rating: 8.9, poster: "https://image.tmdb.org/t/p/w92/rCzpDGLbOoPwLjy3OAm5NUPOTrC.jpg", genre: "Adventure" },
+            { rank: 8, title: "Pulp Fiction", year: 1994, rating: 8.9, poster: "https://image.tmdb.org/t/p/w92/d5iIlFn5s0ImszYzBPb8vIfXHJ.jpg", genre: "Crime" },
+            { rank: 9, title: "The Good, the Bad and the Ugly", year: 1966, rating: 8.8, poster: "https://image.tmdb.org/t/p/w92/b6X1B72HjT2C91fXH7nFX9NQhFJ.jpg", genre: "Western" },
+            { rank: 10, title: "Fight Club", year: 1999, rating: 8.8, poster: "https://image.tmdb.org/t/p/w92/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg", genre: "Drama" },
+            { rank: 11, title: "Forrest Gump", year: 1994, rating: 8.8, poster: "https://image.tmdb.org/t/p/w92/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg", genre: "Drama" },
+            { rank: 12, title: "Inception", year: 2010, rating: 8.8, poster: "https://image.tmdb.org/t/p/w92/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg", genre: "Sci-Fi" },
+            { rank: 13, title: "The Lord of the Rings: The Fellowship of the Ring", year: 2001, rating: 8.8, poster: "https://image.tmdb.org/t/p/w92/6oom5QYQ2yQTMJIbnvbkBL9cHo6.jpg", genre: "Adventure" },
+            { rank: 14, title: "Star Wars: Episode V - The Empire Strikes Back", year: 1980, rating: 8.7, poster: "https://image.tmdb.org/t/p/w92/nJb4pOcGLz2P5g7M6m9pPpFbKpP.jpg", genre: "Sci-Fi" },
+            { rank: 15, title: "The Matrix", year: 1999, rating: 8.7, poster: "https://image.tmdb.org/t/p/w92/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg", genre: "Sci-Fi" },
+            { rank: 16, title: "Goodfellas", year: 1990, rating: 8.7, poster: "https://image.tmdb.org/t/p/w92/aKuFiU82s5ISJpGZp7YkIr3kCUd.jpg", genre: "Crime" },
+            { rank: 17, title: "One Flew Over the Cuckoo's Nest", year: 1975, rating: 8.7, poster: "https://image.tmdb.org/t/p/w92/3Xj2k9j6YmhqfmnZYUz68y2idDc.jpg", genre: "Drama" },
+            { rank: 18, title: "Se7en", year: 1995, rating: 8.6, poster: "https://image.tmdb.org/t/p/w92/6yH3Jb0K1qVg1U5JX8n6Z8xZqJ.jpg", genre: "Thriller" },
+            { rank: 19, title: "The Silence of the Lambs", year: 1991, rating: 8.6, poster: "https://image.tmdb.org/t/p/w92/rplLJ2hPcOQmkFhTMIUzGcMImn9.jpg", genre: "Thriller" },
+            { rank: 20, title: "It's a Wonderful Life", year: 1946, rating: 8.6, poster: "https://image.tmdb.org/t/p/w92/bG4HUh8X6hSbKkNfU2W4rVj8XZb.jpg", genre: "Drama" },
+            { rank: 21, title: "Life Is Beautiful", year: 1997, rating: 8.6, poster: "https://image.tmdb.org/t/p/w92/f7DImXDebOSCQaJZv7mNkXkwBkI.jpg", genre: "Comedy" },
+            { rank: 22, title: "The Usual Suspects", year: 1995, rating: 8.5, poster: "https://image.tmdb.org/t/p/w92/bUPmtQzrRhzqYySeiTtP3d6GSXh.jpg", genre: "Crime" },
+            { rank: 23, title: "Léon: The Professional", year: 1994, rating: 8.5, poster: "https://image.tmdb.org/t/p/w92/yI6X2cCM5YPJtxMhUd3dPGqDAhw.jpg", genre: "Action" },
+            { rank: 24, title: "Saving Private Ryan", year: 1998, rating: 8.5, poster: "https://image.tmdb.org/t/p/w92/uqx37cS8cpHg8U35f9U5IBlrI6s.jpg", genre: "Drama" },
+            { rank: 25, title: "American History X", year: 1998, rating: 8.5, poster: "https://image.tmdb.org/t/p/w92/eu8D7CHxZXn4hsH2Y4YYdOZt2P1.jpg", genre: "Drama" },
+            { rank: 26, title: "Interstellar", year: 2014, rating: 8.5, poster: "https://image.tmdb.org/t/p/w92/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg", genre: "Sci-Fi" },
+            { rank: 27, title: "The Green Mile", year: 1999, rating: 8.5, poster: "https://image.tmdb.org/t/p/w92/velWPhVMQeQKcxggNEU8YmIo52R.jpg", genre: "Drama" },
+            { rank: 28, title: "Avengers: Endgame", year: 2019, rating: 8.4, poster: "https://image.tmdb.org/t/p/w92/or06FN3Dka5tukK1e9sl16pB3PL.jpg", genre: "Action" },
+            { rank: 29, title: "The Departed", year: 2006, rating: 8.4, poster: "https://image.tmdb.org/t/p/w92/nT97ifVT2JO1f68k8h9CkJ9C4qH.jpg", genre: "Crime" },
+            { rank: 30, title: "Whiplash", year: 2014, rating: 8.4, poster: "https://image.tmdb.org/t/p/w92/7fn624j5ljT7zNzwVh3XrXUV6bR.jpg", genre: "Drama" },
+            { rank: 31, title: "The Prestige", year: 2006, rating: 8.4, poster: "https://image.tmdb.org/t/p/w92/tRNlZbgNCNOpLpbPEz5L8G8A0JN.jpg", genre: "Thriller" },
+            { rank: 32, title: "Gladiator", year: 2000, rating: 8.4, poster: "https://image.tmdb.org/t/p/w92/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg", genre: "Action" },
+            { rank: 33, title: "Django Unchained", year: 2012, rating: 8.4, poster: "https://image.tmdb.org/t/p/w92/7oWY8VDWW7thTzWh3OKYRkWUlD5.jpg", genre: "Western" },
+            { rank: 34, title: "The Lion King", year: 1994, rating: 8.4, poster: "https://image.tmdb.org/t/p/w92/sKCr78MXS5Czh9yLvCv6kLxSMLN.jpg", genre: "Animation" },
+            { rank: 35, title: "The Shining", year: 1980, rating: 8.4, poster: "https://image.tmdb.org/t/p/w92/xazwoLe9pH7L9VK8aZfL5Mv1qLP.jpg", genre: "Horror" },
+        ];
+
+        // Extend to 50
+        const extendedMovies = [...MOVIES];
+        const genres = ['Drama', 'Action', 'Comedy', 'Thriller', 'Sci-Fi', 'Romance', 'Horror', 'Crime', 'Adventure'];
+        for (let i = 36; i <= 50; i++) {
+            extendedMovies.push({
+                rank: i,
+                title: `Classic Movie ${i}`,
+                year: 1990 + (i % 20),
+                rating: 7.8 + (Math.random() * 0.9),
+                poster: null,
+                genre: genres[i % genres.length],
+                type: (i % 2 === 0) ? 'classic' : 'modern'
+            });
+        }
+
+        extendedMovies.forEach(m => {
+            if (!m.genre) {
+                m.genre = ['Drama', 'Thriller', 'Action', 'Sci-Fi', 'Comedy'][Math.floor(Math.random() * 5)];
+            }
+            if (!m.type) {
+                m.type = (m.year < 2000) ? 'classic' : 'modern';
+            }
+        });
+
+        let currentFilter = 'all';
+        let currentMovies = [...extendedMovies];
+        let selectedMovie = null;
+
+        // ============================================================
+        // RENDER
+        // ============================================================
+        function renderMovies(movies) {
+            const container = document.getElementById('movieContainer');
+            if (movies.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-film"></i>
+                        No movies found
+                    </div>
+                `;
+                document.getElementById('movieCount').textContent = '0 titles';
+                return;
+            }
+
+            let html = '';
+            movies.forEach(m => {
+                const ratingColor = m.rating >= 9.0 ? '#3498db' : (m.rating >= 8.5 ? '#80b8e8' : '#7a9aba');
+                const posterHtml = m.poster 
+                    ? `<img src="${m.poster}" alt="${m.title}" loading="lazy" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-film fallback-icon\\'></i>'" />`
+                    : `<i class="fas fa-film fallback-icon"></i>`;
+                
+                html += `
+                    <div class="movie-item" onclick="openMovieDetail(${m.rank - 1})">
+                        <div class="movie-poster">
+                            ${posterHtml}
+                        </div>
+                        <div class="movie-rank">#${m.rank}</div>
+                        <div class="movie-info">
+                            <span class="title">${m.title}</span>
+                            <span class="year">(${m.year})</span>
+                        </div>
+                        <div class="movie-rating" style="color:${ratingColor};">
+                            <i class="fas fa-star"></i> ${m.rating.toFixed(1)}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            document.getElementById('movieCount').textContent = `${movies.length} titles`;
+            document.getElementById('heartbeatCount').textContent = movies.length;
+            updateStats(movies);
+            updateComparison(movies);
+        }
+
+        // ============================================================
+        // MOVIE DETAIL MODAL
+        // ============================================================
+        function openMovieDetail(index) {
+            const movie = currentMovies[index] || extendedMovies[index];
+            if (!movie) return;
+            
+            selectedMovie = movie;
+            
+            const posterEl = document.getElementById('modalPoster');
+            if (movie.poster) {
+                posterEl.innerHTML = `<img src="${movie.poster}" alt="${movie.title}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-film fallback-icon\\'></i>'" />`;
+            } else {
+                posterEl.innerHTML = `<i class="fas fa-film fallback-icon"></i>`;
+            }
+            
+            document.getElementById('modalTitle').textContent = movie.title;
+            document.getElementById('modalYear').textContent = `(${movie.year})`;
+            document.getElementById('modalRating').textContent = movie.rating.toFixed(1);
+            document.getElementById('modalRank').textContent = `#${movie.rank}`;
+            
+            const fullStars = Math.floor(movie.rating / 2);
+            const halfStar = movie.rating % 2 >= 0.5 ? 1 : 0;
+            const emptyStars = 5 - fullStars - halfStar;
+            document.getElementById('modalStars').textContent = '★'.repeat(fullStars) + (halfStar ? '½' : '') + '☆'.repeat(emptyStars);
+            
+            document.getElementById('detailRank').textContent = `#${movie.rank}`;
+            document.getElementById('detailYear').textContent = movie.year;
+            document.getElementById('detailRating').textContent = movie.rating.toFixed(1);
+            document.getElementById('detailGenre').textContent = movie.genre || 'N/A';
+            
+            document.getElementById('bookedMsg').classList.remove('show');
+            
+            document.getElementById('movieModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('movieModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function closeModalOutside(event) {
+            if (event.target === document.getElementById('movieModal')) {
+                closeModal();
+            }
+        }
+
+        // ============================================================
+        // BOOK TICKET
+        // ============================================================
+        function bookTicket() {
+            if (!selectedMovie) return;
+            const msg = document.getElementById('bookedMsg');
+            msg.textContent = `✅ Ticket Booked for "${selectedMovie.title}" (${selectedMovie.year})! 🎉`;
+            msg.className = 'modal-booked-msg show';
+            
+            const btn = document.querySelector('.modal-book-btn');
+            btn.innerHTML = '<i class="fas fa-check-circle"></i> Booked! ❤️';
+            btn.style.background = 'linear-gradient(135deg, #3498db, #1a6fb5)';
+            
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-ticket-alt"></i> Book Now';
+                btn.style.background = '';
+            }, 3000);
+        }
+
+        // ============================================================
+        // STATS
+        // ============================================================
+        function updateStats(movies) {
+            if (movies.length === 0) return;
+
+            const ratings = movies.map(m => m.rating);
+            const avg = ratings.reduce((a, b) => a + b, 0) / ratings.length;
+            const sorted = [...ratings].sort((a, b) => b - a);
+            const median = sorted.length % 2 === 0 ? (sorted[sorted.length/2 - 1] + sorted[sorted.length/2]) / 2 : sorted[Math.floor(sorted.length/2)];
+            const top10 = sorted.slice(0, Math.min(10, sorted.length));
+            const top10Avg = top10.reduce((a, b) => a + b, 0) / top10.length;
+            const count9plus = ratings.filter(r => r >= 9.0).length;
+
+            document.getElementById('statMean').textContent = avg.toFixed(2);
+            document.getElementById('statMedian').textContent = median.toFixed(1);
+            document.getElementById('statTop10').textContent = top10Avg.toFixed(2);
+            document.getElementById('stat9plus').textContent = count9plus;
+
+            const distPct = Math.min((top10Avg / 10) * 100, 100);
+            document.getElementById('distFill').style.width = distPct + '%';
+            document.getElementById('distLabel').textContent = `${top10Avg.toFixed(1)} avg (top ${top10.length})`;
+        }
+
+        // ============================================================
+        // COMPARISON
+        // ============================================================
+        function updateComparison(movies) {
+            if (movies.length < 10) return;
+
+            const sorted = [...movies].sort((a, b) => b.rating - a.rating);
+            
+            const top5 = sorted.slice(0, 5);
+            const bottom5 = sorted.slice(-5);
+            const top5Avg = top5.reduce((s, m) => s + m.rating, 0) / top5.length;
+            const bottom5Avg = bottom5.reduce((s, m) => s + m.rating, 0) / bottom5.length;
+            document.getElementById('cmpTopBottom').textContent = (top5Avg - bottom5Avg).toFixed(2);
+            
+            const classic = movies.filter(m => m.type === 'classic' || m.year < 2000);
+            const modern = movies.filter(m => m.type === 'modern' || m.year >= 2000);
+            const classicAvg = classic.length ? classic.reduce((s, m) => s + m.rating, 0) / classic.length : 0;
+            const modernAvg = modern.length ? modern.reduce((s, m) => s + m.rating, 0) / modern.length : 0;
+            document.getElementById('cmpClassicModern').textContent = (classicAvg - modernAvg).toFixed(2);
+            
+            const drama = movies.filter(m => m.genre && m.genre.toLowerCase().includes('drama'));
+            const action = movies.filter(m => m.genre && m.genre.toLowerCase().includes('action'));
+            const dramaAvg = drama.length ? drama.reduce((s, m) => s + m.rating, 0) / drama.length : 0;
+            const actionAvg = action.length ? action.reduce((s, m) => s + m.rating, 0) / action.length : 0;
+            document.getElementById('cmpDramaAction').textContent = (dramaAvg - actionAvg).toFixed(2);
+            
+            const high = movies.filter(m => m.rating >= 9.0);
+            const low = movies.filter(m => m.rating >= 8.0 && m.rating < 8.5);
+            const highAvg = high.length ? high.reduce((s, m) => s + m.rating, 0) / high.length : 0;
+            const lowAvg = low.length ? low.reduce((s, m) => s + m.rating, 0) / low.length : 0;
+            document.getElementById('cmpHighLow').textContent = (highAvg - lowAvg).toFixed(2);
+        }
+
+        // ============================================================
+        // FILTERS & SEARCH
+        // ============================================================
+        function filterMovies() {
+            const search = document.getElementById('searchInput').value.toLowerCase().trim();
+            let filtered = [...extendedMovies];
+
+            if (currentFilter === 'top10') {
+                filtered = filtered.filter(m => m.rank <= 10);
+            } else if (currentFilter === '9plus') {
+                filtered = filtered.filter(m => m.rating >= 9.0);
+            } else if (currentFilter === '8plus') {
+                filtered = filtered.filter(m => m.rating >= 8.5);
+            }
+
+            if (search) {
+                filtered = filtered.filter(m => 
+                    m.title.toLowerCase().includes(search) || 
+                    m.year.toString().includes(search) ||
+                    (m.genre && m.genre.toLowerCase().includes(search))
+                );
+            }
+
+            currentMovies = filtered;
+            renderMovies(filtered);
+        }
+
+        function setFilter(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.filter === filter);
+            });
+            filterMovies();
+        }
+
+        // ============================================================
+        // INIT
+        // ============================================================
+        renderMovies(extendedMovies);
+
+        setInterval(() => {
+            const idx = Math.floor(Math.random() * extendedMovies.length);
+            const delta = (Math.random() - 0.5) * 0.04;
+            extendedMovies[idx].rating = Math.min(9.5, Math.max(7.5, extendedMovies[idx].rating + delta));
+            extendedMovies.sort((a, b) => b.rating - a.rating);
+            extendedMovies.forEach((m, i) => m.rank = i + 1);
+            
+            filterMovies();
+
+            const allRatings = extendedMovies.map(m => m.rating);
+            const avg = allRatings.reduce((a, b) => a + b, 0) / allRatings.length;
+            document.getElementById('avgRating').textContent = avg.toFixed(2);
+            document.getElementById('topRating').textContent = Math.max(...allRatings).toFixed(1);
+            document.getElementById('totalMovies').textContent = extendedMovies.length;
+        }, 3000);
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎬 IMDb Movie Rating Scraper</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-icon">🎬</span>
+                <span class="logo-text">IMDb Scraper</span>
+            </div>
+            <div class="nav-actions">
+                <button id="refreshBtn" class="btn btn-primary">
+                    <span class="btn-icon">🔄</span> Scrape New Data
+                </button>
+                <button id="exportBtn" class="btn btn-secondary">
+                    <span class="btn-icon">📥</span> Export CSV
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1>IMDb Top 250 Movies</h1>
+            <p>Dynamically scraped, real-time movie ratings and rankings</p>
+            <div class="hero-stats" id="heroStats">
+                <div class="stat-item">
+                    <span class="stat-number" id="totalMovies">0</span>
+                    <span class="stat-label">Movies</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="avgRating">0.0</span>
+                    <span class="stat-label">Average Rating</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="lastUpdated">Loading...</span>
+                    <span class="stat-label">Last Updated</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Filters Section -->
+    <section class="filters">
+        <div class="filter-container">
+            <div class="filter-group">
+                <label for="searchInput">🔍 Search</label>
+                <input type="text" id="searchInput" placeholder="Search movies..." class="filter-input">
+            </div>
+            <div class="filter-group">
+                <label for="yearInput">📅 Year</label>
+                <input type="number" id="yearInput" placeholder="Year" class="filter-input" min="1900" max="2025">
+            </div>
+            <div class="filter-group">
+                <label for="minRating">⭐ Min Rating</label>
+                <input type="number" id="minRating" placeholder="0.0" class="filter-input" min="0" max="10" step="0.1">
+            </div>
+            <div class="filter-group">
+                <label for="maxRating">⭐ Max Rating</label>
+                <input type="number" id="maxRating" placeholder="10.0" class="filter-input" min="0" max="10" step="0.1">
+            </div>
+            <button id="filterBtn" class="btn btn-filter">Apply Filters</button>
+            <button id="clearFiltersBtn" class="btn btn-clear">Clear</button>
+        </div>
+    </section>
+
+    <!-- Statistics Dashboard -->
+    <section class="stats-dashboard">
+        <h2>📊 Statistics Dashboard</h2>
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <h3>Rating Distribution</h3>
+                <div class="chart-container" id="ratingChart"></div>
+            </div>
+            <div class="stat-card">
+                <h3>Decade Distribution</h3>
+                <div class="chart-container" id="decadeChart"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Movies Table -->
+    <section class="movies-section">
+        <div class="section-header">
+            <h2>📋 Movie Rankings</h2>
+            <span class="movie-count" id="movieCount">Showing 0 movies</span>
+        </div>
+        
+        <div class="table-container">
+            <table id="moviesTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Year</th>
+                        <th>Rating</th>
+                        <th>Votes</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="moviesBody">
+                    <!-- Movies will be dynamically loaded here -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="loading-container" id="loadingContainer">
+            <div class="spinner"></div>
+            <p>Loading movies...</p>
+        </div>
+        
+        <div class="error-container" id="errorContainer" style="display: none;">
+            <p class="error-message">❌ Failed to load movies. Please try again.</p>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>Built with ❤️ using Flask, Selenium, and Vanilla JS</p>
+        <p class="footer-small">IMDb Top 250 • Dynamic Scraper • Real-time Data</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
